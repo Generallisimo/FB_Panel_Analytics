@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('name');
+            $table->text('name');
+            $table->foreignId('buyer_owner_id')->constrained('users')->cascadeOnDelete();;
+            // $table->foreignId('buyer_owner_id')->index()->constrained('users');
+            // $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('buyer_team', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('buyer_id')->index()->constrained('users');
-            $table->foreignId('team_id')->index()->constrained('teams');
+            $table->foreignId('buyer_id')->constrained('users')->cascadeOnDelete();;
+            $table->foreignId('team_id')->constrained('teams')->cascadeOnDelete();;
             $table->unique(['buyer_id', 'team_id']);
-            $table->softDeletes();
+            // $table->softDeletes();
             $table->timestamps();
         });
     }

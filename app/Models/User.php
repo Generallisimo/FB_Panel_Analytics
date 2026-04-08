@@ -18,7 +18,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable;
 
     /**
      * Get the attributes that should be cast.
@@ -61,5 +61,25 @@ class User extends Authenticatable
     public function teams(): BelongsToMany
     {
         return $this->belongsToMany(Team::class, 'buyer_team', 'buyer_id', 'team_id');
+    }
+
+    public function ownedTeams(): HasMany
+    {
+        return $this->hasMany(Team::class, 'buyer_owner_id');
+    }
+
+    public function scopeByRole($query, string $role)
+    {
+        return $query->whereHas('roles', function($q) use ($role){
+            $q->where('role', $role);
+        });
+    }
+
+    public static function isSupport(int $id){
+        return static::byRole('support')->whereKey($id)->exists();
+    }
+
+    public static function isBuyer(int $id){
+        return static::byRole('buyer')->whereKey($id)->exists();
     }
 }
